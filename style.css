@@ -154,6 +154,29 @@ textarea[name=apraksts]{
     padding-left: 10px;
 }
 
+.gramatuApraksts table{
+    position:relative;
+    table-layout: fixed;
+    margin: 0px auto;
+}
+.gramatuApraksts td {
+    max-width: 600px;
+    vertical-align: top;
+    text-align: justify;
+}
+.gramatuApraksts tr{
+    margin-bottom: 20px;
+}
+.gramatuApraksts table tr td:empty{
+    width:50px;
+}
+.gramatuApraksts table tr td{
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 10px;
+    padding-right: 20px;
+}
+
 
 .top3List li{
     display: inline;

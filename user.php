@@ -23,7 +23,7 @@
     <body>
 <!--        <input type = "submit" value = "Apskatit grāmatas" id = "showGramatasButton" />-->
         <div class="userPanelTitle">
-            <h2">Laipni lūdzam Alex Grāmatnīcā!</h2>
+            <h2 style="font-size: 60px;">Laipni lūdzam Alex Grāmatnīcā!</h2>
         </div>
         <div class="upMenuList">
             <ul>
@@ -89,6 +89,8 @@
                 $page_id = $_GET['page'];
                 if($page_id >= 10){
                     $zanrsArr = array();
+                    $gramatasArr = array();
+                    
                     $result = mysqli_query($con, "SELECT Zanrs FROM Zanrs WHERE Nodala = '"
                             . $nodalaArr[$page_id-9]['name'] . "'");
                     $idx = 1;
@@ -107,7 +109,7 @@
                     echo "</ul>";
                     echo "</div>";
                     
-                    if(isset($_GET['zanrs'])){
+                    if(isset($_GET['zanrs']) && ! isset($_GET['gramata'])){
                         
                         $zanrs_id = $_GET['zanrs'];
                         $result = mysqli_query($con, "SELECT * FROM Gramata WHERE Zanrs = '" .
@@ -116,7 +118,11 @@
                             echo "<div class=\"gramatuList\">";
                             echo "<table>";
                             $count = 0;
+                            $idx = 1;
                             while($row = mysqli_fetch_array($result)){
+                                $gramatasArr[$idx] = array(
+                                    'ISBN' => '' . $row['ISBN'] . '',
+                                );
                                 $publisher = mysqli_query($con, "SELECT izd.Nosaukums"
                                         . " FROM Izdevnieciba izd JOIN Izdevnieciba_Gramata ig ON "
                                         . "ig.ID_Izdevnieciba = izd.ID_Izdevnieciba JOIN Gramata g ON g.ISBN = ig.ISBN"
@@ -137,7 +143,9 @@
                                 echo "<table>";
                                     echo "<tr>";
                                         echo "<td>";
-                                            echo "<a href=\"#\"><h1>". $row['Nosaukums'] ."</a></h1>";
+                                            echo "<h1><a href=\"user.php?page="
+                                        . $_GET['page'] . "&zanrs=". $_GET['zanrs'] . "&gramata=" .
+                                                    $idx . "\"><h1>". $row['Nosaukums'] ."</a></h1>";
                                         echo "</td>";
                                     echo "</tr>";
                                     echo "<tr>";
@@ -157,12 +165,20 @@
                                             . "\">". $row['Cena'] ."&euro; </p>";
                                         echo "</td>";
                                     echo "</tr>";
+                                    echo "<tr>";
+                                        echo "<td>";
+                                            echo "<button type=\"submit\" style=\""
+                                        . ""
+                                                    . "\">Ielikt grozā</button>";
+                                        echo "</td>";
+                                    echo "</tr>";
                                 echo "</table>";
                                 echo "</td>";
                                 $count++;
                                 
                                 if($count %2 == 0)
                                     echo "</tr>";
+                                $idx++;
                             }
                             echo "</table>";
                             echo "</div>";
@@ -173,6 +189,80 @@
                         }
                                 
                     }
+                    else if(isset($_GET['gramata'])){
+                        $zanrs_id = $_GET['zanrs'];
+                        $result = mysqli_query($con, "SELECT * FROM Gramata WHERE Zanrs = '" .
+                                $zanrsArr[$zanrs_id]['name'] . "'");
+                        $count = 0;
+                        $idx = 1;
+//                        $row = mysqli_fetch_array($result);
+//                        $arrayOfRows = array();
+//                        while(mysqli_fetch_array($result)){
+//                            $arrayOfRows = $row;
+//                        }
+//                        $gramatasArr[1] = array(
+//                                'ISBN' => '' . $arrayOfRows[$_GET['gramata']]['ISBN'] . '',
+//                         );
+//                        echo print_r($gramatasArr);
+                        
+                        while($row = mysqli_fetch_array($result)){
+                            if($idx == $_GET['gramata']){
+                                $gramatasArr[$idx] = array(
+                                    'ISBN' => '' . $row['ISBN'] . '',
+                                    'Nosaukums' => '' . $row['Nosaukums'] . '',
+                                    'Apraksts' => '' . $row['Apraksts'] . '',
+                                );
+                                break;
+                            }
+                            $idx++;
+                        }
+                        
+                        $autorsResult = mysqli_query($con, "SELECT Vards, Uzvards FROM Autors WHERE ID_Autors = '" . 
+                                $row['ID_Autors'] . "'");
+                        while($autorsRow = mysqli_fetch_array($autorsResult)){
+                            $vards = $autorsRow['Vards'];
+                            $uzvards = $autorsRow['Uzvards'];
+                        }
+                        
+                        echo "<div class=\"gramatuApraksts\">";
+                            echo "<table>";
+                                echo "<tr>";
+                                    echo "<td><img width=320 height=480 src='data:image/jpeg;base64,".base64_encode( $row["Bilde"] )."'/></td>";
+                                    echo "<td>";
+                                        echo "<table>";
+                                            echo "<tr>";
+                                                echo "<h1 style=\"font-size:35px;\">" . $row['Nosaukums'] . "</h1>";
+                                            echo "</tr>";
+                                            echo "<tr>";
+                                                echo "<p style=\"font-size:15px;\">Autors: " . $vards . " " . $uzvards . "</p>";
+                                                echo "<hr style=\"size: 5px; margin-top:10px; margin-bottom:20px;\">";
+                                            echo "</tr>";
+                                            echo "<tr>";
+                                                echo "<p style=\""
+                                            . "color:FF8400; font-weight:bold; font-size:35px;"
+                                            . "\">". $row['Cena'] . "&euro;</p>";
+                                                echo "<button type=\"submit\" style=\" height:40px; margin-top:10px;"
+                                                    . ""
+                                                    . "\"><p style=\"font-size:20px;\">Ielikt grozā</p></button>";
+                                                echo "<hr style=\"size: 5px; margin-top:10px; margin-bottom:20px;\">";
+                                            echo "</tr>";
+                                            echo "<tr>";
+                                                echo "<p style=\"font-size:17px; font-weight:bold;\">Apraksts</p>";
+                                                echo "<p style=\"font-\">" . $row['Apraksts'] . "</p>";
+                                            echo "</tr>";
+                                            echo "<tr>";
+                                                echo "<p style=\"font-size:17px; font-weight:bold; margin-top: 10px;\">Informācija par produktu</p>";
+                                            echo "</tr>";
+                                            echo "<table>"
+                                            
+                                        echo "</table>";
+                                    echo "</td>";
+                                echo "</tr>";
+
+                            echo "</table>";
+                        echo "</div>";
+                    }
+                    
                 }
                 
                 
@@ -195,7 +285,6 @@
 //            }
 
         ?>
-        
     </body>
     
 </html>
