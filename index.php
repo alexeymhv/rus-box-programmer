@@ -18,7 +18,7 @@ and open the template in the editor.
                 <input type="submit" value="Admin Panel" id="adminPanelButton" />
         </form>
         
-        <form name="userPage" action="user.php">
+        <form name="userPage" action="user.php?">
             <input type="submit" value="User Panel" id="userPanelButton" />
         </form>
         </div>

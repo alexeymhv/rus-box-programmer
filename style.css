@@ -90,6 +90,76 @@ textarea[name=apraksts]{
     border: solid 1px #85b1de;
 }
 
+.userPanelTitle{
+    position: relative;
+    font-size: 40px;
+    font-weight: bold;
+    text-align: center;
+}
+
+.upMenuList{
+    position: relative;
+    margin-top:20px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+.upMenuList li{
+    display: inline;
+    margin-right: 30px;
+    margin-left:10px;
+    font-size:20px;
+}
+
+.nodalaList{
+    position: relative;
+    margin-bottom: 20px;
+    text-align: left;
+    width:10px;
+    float:left;
+}
+
+.nodalaList li{
+    display: block;
+    margin-right: 30px;
+    margin-left:10px;
+    margin-bottom: 20px;
+    font-size:20px;
+}
+
+.gramatuList table{
+    position:relative;
+    table-layout: fixed;
+    margin: 0px auto;
+}
+.gramatuList a{
+    text-decoration: none;
+}
+.gramatuList a:hover{
+    color: #FF8400;
+}
+.gramatuList td {
+    max-width: 300px;
+    vertical-align: top;
+    text-align: justify;
+}
+.gramatuList tr{
+    margin-bottom: 20px;
+}
+.gramatuList table tr td:empty{
+    width:50px;
+}
+.gramatuList table tr td{
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 10px;
+}
+
+
+.top3List li{
+    display: inline;
+}
+
+
 /*
 input[name=isbn]{
     border: solid 1px #85b1de;
