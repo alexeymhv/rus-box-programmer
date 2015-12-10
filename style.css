@@ -123,7 +123,7 @@ textarea[name=apraksts]{
     margin-right: 30px;
     margin-left:10px;
     margin-bottom: 20px;
-    font-size:20px;
+    font-size:25px;
 }
 
 .gramatuList table{
@@ -191,7 +191,8 @@ input[type=submit] {
     border: black solid 1px;
     position:relative;
     table-layout: fixed;
-    margin: 0px auto;
+/*    margin: 0px auto;*/
+    margin-left:150px;
 }
 .pasutijumuApraksts td {
     max-width: 600px;
@@ -201,6 +202,11 @@ input[type=submit] {
 .pasutijumuApraksts tr{
     margin-bottom: 20px;
 }
+.pasutijumuApraksts th{
+    padding:10px;
+    font-size: 20px;
+    font-weight:bold;
+}
 .pasutijumuApraksts table tr td:empty{
     width:50px;
 }
@@ -209,6 +215,22 @@ input[type=submit] {
     padding-bottom: 10px;
     padding-left: 10px;
     padding-right: 20px;
+}
+
+.adminPanelList{
+    position: relative;
+    margin-bottom: 20px;
+    text-align: left;
+    width:10px;
+    float:left;
+}
+
+.adminPanelList li{
+    display: block;
+    margin-right: 30px;
+    margin-left:10px;
+    margin-bottom: 20px;
+    font-size:25px;
 }
 
 

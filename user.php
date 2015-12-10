@@ -30,7 +30,7 @@
                 <li><a href="user.php?">Sakums</a></li>
                 <li><a href="user.php?page=1">Gramātas</a></li>
                 <li><a href="user.php?page=2">Mani pasutijumi</a></li>
-                <li><a href="user.php?page=4">Reģistrēties</a></li>
+                <li><a href="user.php?page=3">Administratoru panele</a></li>
             </ul>
             <hr size="3">
         </div>
@@ -312,9 +312,11 @@
                                                 $row = mysqli_fetch_array($query);
                                                 $id_pasutijums = $row["ID_Pasutijums"];
                                                 
-                                                $query = mysqli_query($con, "INSERT INTO Pasutijums_Prece(ID_Pasutijums, "
+                                                foreach($_SESSION['shopping_cart'] as $id => $product){
+                                                    $query = mysqli_query($con, "INSERT INTO Pasutijums_Prece(ID_Pasutijums, "
                                                         . "ISBN, Daudzums) VALUES('". $id_pasutijums ."', '".
                                                         $product["gr_isbn"] ."', '". $product["quantity"] ."')");
+                                                }
                                             }
                                             
                                         }
@@ -344,109 +346,64 @@
                     }
                 }
                 
-                if($_GET['page'] == 4){
+                if($_GET['page'] == 3){
+                    echo "<div class=\"adminPanelList\">";
+                    echo "<ul>";
+                        echo "
+                            <li><a href=\"user.php?page=3&admin_menu=1\">Pasūtījumi</a></li>
+                                
+                            ";
+                    echo "</ul>";
+                    echo "</div>";
+                }
+                
+                if($_GET['page'] == 3 && isset($_GET['admin_menu']) == 1){
+                    $query = mysqli_query($con, "SELECT * FROM pasutijumu_info ORDER BY pasutijumu_info.Datums ASC");
                     
-//                    echo "<div class=\"gramatuApraksts\">";
-//                        echo "<p style=\"text-align:center;font-size:28px;font-weight:bold;margin-bottom:10px;\">Reģistrācija</p>";
-//                        echo "<table style=\"text-align:center;\">";
-//                            echo "<tr>";
-//                                echo "<td><span style=\"font-size:25px;\">Lietotājvārds:</span></td>";
-//                                echo "<td><input type=\"text\" name=\"login\" value=\"\" style=\"border: solid 1px; height:28px; font-size:20px;\"/></td>";
-//                            echo "</tr>";
-//                            echo "<tr>";
-//                                echo "<td><span style=\"font-size:25px;\">Parole:</span></td>";
-//                                echo "<td><input type=\"password\" name=\"parole\" value=\"\" style=\"border: solid 1px; height:28px;font-size:20px;\"/></td>";
-//                            echo "</tr>";
-//                            echo "<tr>";
-//                                echo "<td><span style=\"font-size:25px;\">Vārds:</span></td>";
-//                                echo "<td><input type=\"text\" name=\"vards\" value=\"\" style=\"border: solid 1px; height:28px; font-size:20px;\"/></td>";
-//                            echo "</tr>";
-//                            echo "<tr>";
-//                                echo "<td><span style=\"font-size:25px;\">Uzvārds:</span></td>";
-//                                echo "<td><input type=\"text\" name=\"uzvards\" value=\"\" style=\"border: solid 1px; height:28px; font-size:20px;\"/></td>";
-//                            echo "</tr>";
-//                            echo "<tr>";
-//                                echo "<td><span style=\"font-size:25px;\">Epasts:</span></td>";
-//                                echo "<td><input type=\"text\" name=\"epasts\" value=\"\" style=\"border: solid 1px; height:28px; font-size:20px;\"/></td>";
-//                            echo "</tr>";
-//                            echo "<tr>";
-//                                echo "<td><span style=\"font-size:25px;\">Telefonnumurs:</span></td>";
-//                                echo "<td><input type=\"text\" name=\"telephone\" value=\"\" style=\"border: solid 1px; height:28px; font-size:20px;\"/></td>";
-//                            echo "</tr>";
-//                            echo "<tr>";
-//                                echo "<td><span style=\"font-size:25px;\">Iela:</span></td>";
-//                                echo "<td><input type=\"text\" name=\"iela\" value=\"\" style=\"border: solid 1px; height:28px; font-size:20px;\"/></td>";
-//                            echo "</tr>";
-//                            echo "<tr>";
-//                                echo "<td><span style=\"font-size:25px;\">Pilsēta:</span></td>";
-//                                echo "<td><input type=\"text\" name=\"pilseta\" value=\"\" style=\"border: solid 1px; height:28px; font-size:20px;\"/></td>";
-//                            echo "</tr>";
-//                            echo "<tr>";
-//                                echo "<td><span style=\"font-size:25px;\">Indekss:</span></td>";
-//                                echo "<td><input type=\"text\" name=\"indekss\" value=\"\" style=\"border: solid 1px; height:28px; font-size:20px;\"/></td>";
-//                            echo "</tr>";
-//                            echo "<tr>";
-//                                echo "<td><span style=\"font-size:25px;\">Valsts:</span></td>";
-//                                echo "<td><input type=\"text\" name=\"valsts\" value=\"\" style=\"border: solid 1px; height:28px; font-size:20px;\"/></td>";
-//                            echo "</tr>";
-//                            echo "<tr>";
-//                                echo "<td></td>";
-//                                echo "<td><input type=\"submit\" name=\"registret\" value=\"Reģistrēt\" style=\"font-size:20px;width:246px;height:30px;\"/></td>";
-//                            echo "</tr>";
-//                            
-//                            
-//                        echo "</table>";
-//                    echo "</div>";
-//                    
-//                        $lietotajvardsEmpty = false;
-//                        $paroleEmpty = false;
-//                        $vardsEmpty = false;
-//                        $uzvardsEmpty = false;
-//                        $epastsEmpty = false;
-//                        $telefonnumursEmpty = false;
-//                        $ielaEmpty = false;
-//                        $pilsetaEmpty = false;
-//                        $indekssEmpty = false;
-//                        $valstsEmpty = false;
-//                        $lietotajvardsUnique = true;
-//
-//                        if($_SERVER["REQUEST_METHOD"] == "POST"){
-//                            if($_POST["login"] == "")
-//                                $lietotajvardsEmpty = true;
-//                            if($_POST["parole"] == "")
-//                                $paroleEmpty = true;
-//                            if($_POST["vards"] == "")
-//                                $vardsEmpty = true;
-//                            if($_POST["uzvards"] == "")
-//                                $uzvardsEmpty = true;
-//                            if($_POST["epasts"] == "")
-//                                $epastsEmpty = true;
-//                            if($_POST["telephone"] == "")
-//                                $telefonnumursEmpty = true;
-//                            if($_POST["iela"] == "")
-//                                $ielaEmpty = true;
-//                            if($_POST["pilseta"] == "")
-//                                $pilsetaEmpty = true;
-//                            if($_POST["indekss"] == "")
-//                                $indekssEmpty = true;
-//                            if($_POST["valsts"] == "")
-//                                $valstsEmpty = true;
-//                            
-//                            $lietotajvards = $_POST["login"];
-//                            $parole = $_POST["parole"];
-//                            $vards = $_POST["vards"];
-//                            $uzvards = $_POST[""];
-//                            
-//                            $checkVar = mysqli_query($con, "SELECT * FROM Lietotajs WHERE Login = '". $lietotajvards ."'");
-//                            $checkVarNum = mysqli_num_rows($checkVar);
-//                            if($checkVarNum){
-//                                $lietotajvardsUnique = false;
-//                            }
-//                            if($lietotajvardsEmpty){
-//                                echo "ASD";
-//                            }
-//                            
-//                        }    
+                    echo "<div class=\"pasutijumuApraksts\">
+                            <table>
+                                <tr>
+                                    <th>
+                                        Datums
+                                    </th>
+                                    <th>
+                                        ISBN
+                                    </th>
+                                    <th>
+                                        Nosaukums
+                                    </th>
+                                    <th>
+                                        Lietotajs
+                                    </th>
+                                    <th>
+                                        E-pasts
+                                    </th>
+                                    <th>
+                                        Adrese
+                                    </th>
+                                    <th>
+                                        Cena
+                                    </th>
+                                    <th>
+                                        Daudzums
+                                    </th>
+                                    <th>
+                                        Summa
+                                    </th>
+                                </tr>";
+                    while($row = mysqli_fetch_array($query)){
+                        echo "  <tr><td>". $row["Datums"] ."</td>";
+                        echo "      <td>". $row["ISBN"] ."</td>";
+                        echo "      <td>". $row["Nosaukums"] ."</td>";
+                        echo "      <td>". $row["login"] ."</td>";
+                        echo "      <td>". $row["Epasts"] ."</td>";
+                        echo "      <td>". $row["Iela"] .", " . $row["Indekss"] .", ". $row["Pilseta"] .", ". $row["Valsts"] ."</td>";
+                        echo "      <td>". $row["Cena"] ."&euro;" ."</td>";
+                        echo "      <td>". $row["Daudzums"] ."</td>";
+                        echo "      <td>". $row["Summa"] ."&euro;" ."</td>";
+                        echo "  </tr>";
+                    }
+                    echo "</table>";
                 }
                 
                 $page_id = $_GET['page'];
@@ -585,15 +542,6 @@
                                 $zanrsArr[$zanrs_id]['name'] . "'");
                         $count = 0;
                         $idx = 1;
-//                        $row = mysqli_fetch_array($result);
-//                        $arrayOfRows = array();
-//                        while(mysqli_fetch_array($result)){
-//                            $arrayOfRows = $row;
-//                        }
-//                        $gramatasArr[1] = array(
-//                                'ISBN' => '' . $arrayOfRows[$_GET['gramata']]['ISBN'] . '',
-//                         );
-//                        echo print_r($gramatasArr);
                         
                         while($row = mysqli_fetch_array($result)){
                             if($idx == $_GET['gramata']){
