@@ -351,6 +351,7 @@
                     echo "<ul>";
                         echo "
                             <li><a href=\"user.php?page=3&admin_menu=1\">Pasūtījumi</a></li>
+                            <li><a href=\"user.php?page=4&admin_menu=2\">Datu pārvaldīšana</a></li>
                                 
                             ";
                     echo "</ul>";
@@ -406,6 +407,126 @@
                     echo "</table>";
                 }
                 
+                if($_GET['page'] == 4 && isset($_GET['admin_menu']) == 2){
+                    echo "<div class=\"adminPanelList\">";
+                    echo "<ul>";
+                        echo "
+                            <li><a href=\"user.php?page=5&admin_menu=2&data_reg=1&gramatas=1\">Gramatas</a></li>
+                            <li><a href=\"user.php?page=6&admin_menu=2&data_reg=2&izdevniecibas=1\">Izdevniecības</a></li>
+                            ";
+                    echo "</ul>";
+                    echo "</div>";
+                }
+                if($_GET['page'] == 5 && isset($_GET['admin_menu']) == 2 && isset($_GET['data_reg']) == 1 && isset($_GET['gramatas']) == 1){
+                    echo "<div class=\"adminPanelList\">";
+                    echo "<ul>";
+                        echo "
+                            <li><a href=\"user.php?page=5&admin_menu=2&data_reg=1&gramatas=1&gr_menu=1\">Pievienot grāmatu</a></li>
+                            <li><a href=\"user.php?page=5&admin_menu=2&data_reg=1&gramatas=1&gr_menu=2\">Rēdiģet grāmatas datus</a></li>
+                            <li><a href=\"user.php?page=5&admin_menu=2&data_reg=1&gramatas=1&gr_menu=3\">Dzēst grāmatu</a></li>
+                            ";
+                    echo "</ul>";
+                    echo "</div>";
+                }
+                
+                if($_GET['page'] == 6 && isset($_GET['admin_menu']) == 2 && isset($_GET['data_reg']) == 2 && isset($_GET['izdevniecibas']) == 1){
+                    echo "<div class=\"adminPanelList\">";
+                    echo "<ul>";
+                        echo "
+                            <li><a href=\"user.php?page=6&admin_menu=2&data_reg=2&izdevniecibas=1&izd_menu=1\">Pievienot izdevniecību</a></li>
+                            <li><a href=\"user.php?page=6&admin_menu=2&data_reg=2&izdevniecibas=1&izd_menu=2\">Rēdiģet izdevniecības datus</a></li>
+                            <li><a href=\"user.php?page=6&admin_menu=2&data_reg=2&izdevniecibas=1&izd_menu=3\">Dzēst izdevniecību</a></li>
+                            ";
+                    echo "</ul>";
+                    echo "</div>";
+                }
+                
+                if(isset($_GET['gr_menu']) == 1){
+                    echo "
+                         <div class=\"pasutijumuApraksts\">
+                            <form action=\"user.php?page=5&admin_menu=2&data_reg=1&gramatas=1&gr_menu=1\" method=\"POST\" enctype=\"multipart/form-data\">
+                                <div class=\"gramataForm\">
+                                    <table>
+                                        <tr>
+                                            <td><p>ISBN</p></td>
+                                            <td><input type=\"text\" name=\"isbn\"/></td>
+                                        </tr>
+                                        <tr>
+                                            <td><p>Nosaukums</p></td>
+                                            <td><input type=\"text\" name=\"nosaukums\"/></td>
+                                        </tr>
+                                        <tr>
+                                            <td><p>Apraksts</p></td>
+                                            <td><textarea name=\"apraksts\" rows=\"10\" cols=\"60\" id=\"aprakstsArea\"></textarea></td>
+                                        </tr>
+                                        <tr>
+                                            <td><p>Autors</p></td>
+                                            <td>
+                                                <select name=\"autorList\" style=\"width:450px\">
+                                                    <option></option>
+                                                </select>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><p>Izdevniecība</p></td>
+                                            <td>
+                                                <select name=\"izdevniecibaList\" style=\"width:450px\">
+                                                    <option></option>
+                                                </select>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><p>Nodala</p></td>
+                                            <td>
+                                                <select name=\"nodalaList\" style=\"width:450px\">
+                                                    <option></option>
+                                                </select>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><p>Zanrs</p></td>
+                                            <td>
+                                                <select name=\"zanrsList\" style=\"width:450px\">
+                                                    <option></option>
+                                                </select>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><p>Lpp</p></td>
+                                            <td><input type=\"text\" name=\"lpp\"/></td>
+                                        </tr>
+                                        <tr>
+                                            <td><p>Bilde</p></td>
+                                            <td><input type=\"file\" name=\"bilde\" value=\"\" /></td>
+                                        </tr>
+                                        <tr>
+                                            <td><p>Gads</p></td>
+                                            <td><input type=\"text\" name=\"gads\"/></td>
+                                        </tr>
+                                        <tr>
+                                            <td><p>Vaka tips</p></td>
+                                            <td><input type=\"text\" name=\"vaka_tips\"/></td>
+                                        </tr>
+                                        <tr>
+                                            <td><p>Cena</p></td>
+                                            <td><input type=\"text\" name=\"cena\"/></td>
+                                        </tr>
+                                        <tr>
+                                            <td><p>Daudzums</p></td>
+                                            <td><input type=\"text\" name=\"daudzums\"/></td>
+                                        </tr>
+
+
+                                    </table>
+                                </div>
+                            </form>
+                         </div>";
+                    
+                    
+                }
+                
+                
+                
                 $page_id = $_GET['page'];
                 if($page_id >= 10){
                     
@@ -430,7 +551,34 @@
                     echo "</ul>";
                     echo "</div>";
                     
-                    if(isset($_GET['zanrs']) && ! isset($_GET['gramata'])){
+                    if(isset($_GET['zanrs']) && isset($_GET['gramata'])){
+                        if(isset($_POST['add_to_cart'])){
+                            $isbn = $_POST['gr_isbn'];
+                            $counter = 1;
+                            $idx = 0;
+                            if(!empty($_SESSION['shopping_cart'])){
+                                foreach($_SESSION['shopping_cart'] as $id => $product){
+                                    if($product['gr_isbn'] == $isbn){
+                                        $counter+=$product['quantity'];
+                                        break;
+                                    }
+                                    $idx++;
+                                }
+                            }
+                            if($counter == 1){
+                                $count = count($_SESSION['shopping_cart']);
+                                $_SESSION['shopping_cart'][$count]['gr_isbn'] = $_POST['gr_isbn'];
+                                $_SESSION['shopping_cart'][$count]['quantity'] = $counter; 
+                            }
+                            else{
+                                $count = $idx;
+                                $_SESSION['shopping_cart'][$count]['gr_isbn'] = $_POST['gr_isbn'];
+                                $_SESSION['shopping_cart'][$count]['quantity'] = $counter; 
+                            }
+                        }
+                    }
+                    
+                    if(isset($_GET['zanrs']) && !isset($_GET['gramata'])){
                         
                         if(isset($_POST['add_to_cart'])){
                             $isbn = $_POST['gr_isbn'];
@@ -587,9 +735,10 @@
                                                 echo "<p style=\""
                                             . "color:FF8400; font-weight:bold; font-size:35px;"
                                             . "\">". $row['Cena'] . "&euro;</p>";
-                                                echo "<button type=\"submit\" style=\" height:40px; margin-top:10px;"
-                                                    . ""
-                                                    . "\"><p style=\"font-size:20px;\">Ielikt grozā</p></button>";
+                                                echo "<form action=\"user.php?page=".$_GET['page']."&zanrs=".$_GET['zanrs']."&gramata=".$_GET['gramata']."\" method=\"post\">
+                                                        <input type=\"hidden\" name=\"gr_isbn\" value=\"".$row['ISBN']."\"/>
+                                                        <input type=\"submit\" name=\"add_to_cart\" value=\"Ielikt grozā\"/>
+                                                      </form>";
                                                 echo "<hr style=\"size: 5px; margin-top:10px; margin-bottom:20px;\">";
                                             echo "</tr>";
                                             echo "<tr>";

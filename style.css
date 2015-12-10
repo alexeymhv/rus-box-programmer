@@ -85,6 +85,8 @@ textarea[name=apraksts]{
 }
 .gramataForm input{
     border: solid 1px #85b1de;
+    font-size: 20px;
+    width:446px;
 }
 .gramataForm textarea{
     border: solid 1px #85b1de;
@@ -191,8 +193,7 @@ input[type=submit] {
     border: black solid 1px;
     position:relative;
     table-layout: fixed;
-/*    margin: 0px auto;*/
-    margin-left:150px;
+    margin: 0px auto;
 }
 .pasutijumuApraksts td {
     max-width: 600px;
@@ -204,6 +205,10 @@ input[type=submit] {
 }
 .pasutijumuApraksts th{
     padding:10px;
+    font-size: 20px;
+    font-weight:bold;
+}
+.pasutijumuApraksts p{
     font-size: 20px;
     font-weight:bold;
 }
