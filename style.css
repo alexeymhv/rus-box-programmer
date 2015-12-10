@@ -107,7 +107,7 @@ textarea[name=apraksts]{
     display: inline;
     margin-right: 30px;
     margin-left:10px;
-    font-size:20px;
+    font-size:30px;
 }
 
 .nodalaList{
@@ -176,6 +176,41 @@ textarea[name=apraksts]{
     padding-left: 10px;
     padding-right: 20px;
 }
+
+input[type=submit] {
+    padding:5px 15px; 
+    background:#ccc; 
+    border:0 none;
+    cursor:pointer;
+    -webkit-border-radius: 5px;
+    border-radius: 5px; 
+    font-size:20px;
+}
+
+.pasutijumuApraksts table{
+    border: black solid 1px;
+    position:relative;
+    table-layout: fixed;
+    margin: 0px auto;
+}
+.pasutijumuApraksts td {
+    max-width: 600px;
+    vertical-align: top;
+    text-align: center
+}
+.pasutijumuApraksts tr{
+    margin-bottom: 20px;
+}
+.pasutijumuApraksts table tr td:empty{
+    width:50px;
+}
+.pasutijumuApraksts table tr td{
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 10px;
+    padding-right: 20px;
+}
+
 
 
 .top3List li{
