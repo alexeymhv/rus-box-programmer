@@ -190,13 +190,13 @@ input[type=submit] {
 }
 
 .pasutijumuApraksts table{
-    border: black solid 1px;
+    border: white solid 1px;
     position:relative;
     table-layout: fixed;
     margin: 0px auto;
 }
 .pasutijumuApraksts td {
-    max-width: 600px;
+    max-width: 200px;
     vertical-align: top;
     text-align: center
 }
@@ -239,7 +239,7 @@ input[type=submit] {
 }
 
 .admpasutijumuApraksts table{
-    border: black solid 1px;
+    //border: black solid 1px;
     position:relative;
     table-layout: fixed;
     margin-left:150px;

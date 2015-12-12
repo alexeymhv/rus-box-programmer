@@ -27,7 +27,7 @@
         </div>
         <div class="upMenuList">
             <ul>
-                <li><a href="user.php?">Sakums</a></li>
+                <li><a href="user.php?">Sākums</a></li>
                 <li><a href="user.php?page=1">Grāmatas</a></li>
                 <li><a href="user.php?page=2">Mani pasutijumi</a></li>
                 <li><a href="user.php?page=3">Administratoru panele</a></li>
@@ -318,13 +318,12 @@
                                     $product["gr_isbn"] ."', '". $product["quantity"] ."')");
                             }
                             
+                            echo "<script>window.location.assign(\"user.php?empty_cart=1\")</script>";
                         }
                         else{
                             echo "<h3 style=\"color:red; text-align:center; margin-top:10px; \">Jāaizpilda visus laukus!</h3>";
                         }
-                        
-                        
-                        
+
                         }
                     }
                 }
@@ -395,7 +394,8 @@
                     echo "<ul>";
                         echo "
                             <li><a href=\"user.php?page=5&admin_menu=2&data_reg=1&gramatas=1\">Gramatas</a></li>
-                            <li><a href=\"user.php?page=6&admin_menu=2&data_reg=2&izdevniecibas=1\">Izdevniecības</a></li>
+                            <li><a href=\"user.php?page=4&admin_menu=2&data_reg=2\">Visas izdevniecības</a></li>
+                            <li><a href=\"user.php?page=4&admin_menu=2&data_reg=3\">Visi lietotāji</a></li>
                             ";
                     echo "</ul>";
                     echo "</div>";
@@ -411,15 +411,65 @@
                     echo "</div>";
                 }
                 
-                if($_GET['page'] == 6 && isset($_GET['admin_menu']) == 2 && isset($_GET['data_reg']) == 2 && isset($_GET['izdevniecibas']) == 1){
-                    echo "<div class=\"adminPanelList\">";
-                    echo "<ul>";
+                $data_reg = @$_GET["data_reg"];
+                if($data_reg == 2){
+                    echo "
+                        <div class=\"pasutijumuApraksts\">
+                            <table>
+                                <tr>
+                                    <th>Nosaukums</th>
+                                    <th>Telefonnumurs</th>
+                                    <th>E-pasts</th>
+                                    <th>Adrese</th>
+                                </tr>
+                                ";
+                    $result = mysqli_query($con, "SELECT * FROM izdevnieciba_info_complete");
+                    while($row = mysqli_fetch_array($result)){
                         echo "
-                            <li><a href=\"user.php?page=6&admin_menu=2&data_reg=2&izdevniecibas=1&izd_menu=1\">Pievienot izdevniecību</a></li>
-                            <li><a href=\"user.php?page=6&admin_menu=2&data_reg=2&izdevniecibas=1&izd_menu=2\">Visas izdevniecības</a></li>
+                            <tr>
+                                <td>". $row["Nosaukums"] ."</td>
+                                <td>". $row["Telefonnumurs"] ."</td>
+                                <td>". $row["Epasts"] ."</td>
+                                <td>". $row["Iela"] .", ". $row["Indekss"] .", ". $row["Pilseta"] .", ". $row["Valsts"] ."</td>
+                            </tr>
                             ";
-                    echo "</ul>";
-                    echo "</div>";
+                    }
+                           echo "</table>
+                        </div>
+                         "; 
+                }
+                
+                if($data_reg == 3){
+                    echo "
+                        <div class=\"pasutijumuApraksts\">
+                            <table>
+                                <tr>
+                                    <th>Vards</th>
+                                    <th>Uzvards</th>
+                                    <th>Login</th>
+                                    <th>Parole</th>
+                                    <th>Telefonnumurs</th>
+                                    <th>E-pasts</th>
+                                    <th>Adrese</th>
+                                </tr>
+                                ";
+                    $result = mysqli_query($con, "SELECT * FROM lietotaji_info_complete");
+                    while($row = mysqli_fetch_array($result)){
+                                                echo "
+                            <tr>
+                                <td>". $row["Vards"] ."</td>
+                                <td>". $row["Uzvards"] ."</td>
+                                <td>". $row["Login"] ."</td>
+                                <td>". $row["Parole"] ."</td>
+                                <td>". $row["Telefonnumurs"] ."</td>
+                                <td>". $row["Epasts"] ."</td>
+                                <td>". $row["Iela"] .", ". $row["Indekss"] .", ". $row["Pilseta"] .", ". $row["Valsts"] ."</td>
+                            </tr>
+                            ";
+                    }
+                        echo "</table>
+                        </div>
+                         "; 
                 }
                 
                 $gr_menu = @$_GET["gr_menu"];
@@ -753,7 +803,7 @@
                                 $daudzumsIsInt && !$_POST["nosaukums"]=="" &&
                             !$_POST["apraksts"]=="" && !$_POST["lpp"]=="" && 
                             !$_POST["gads"]=="" &&
-                            !$_POST["vaka_tips"]=="" && !$_POST["cena"]=="" && !$_POST["daudzums"] == ""){
+                            !$_POST["vaka_tips"]=="" && !$_POST["cena"]=="" && !strlen($_POST["daudzums"]) == 0){
                                 $isbn = mysqli_real_escape_string($con, @$_GET["gr_dati"]);
                                 $nosaukums = mysqli_real_escape_string($con, $_POST['nosaukums']);
                                 $apraksts = mysqli_real_escape_string($con, $_POST['apraksts']);
@@ -919,10 +969,32 @@
                                     echo "</tr>";
                                     echo "<tr>";
                                         echo "<td>";
-                                            echo "<form action=\"user.php?page=".$_GET['page']."&zanrs=".$_GET['zanrs']."\" method=\"post\">
+                                            $checkSkaits = mysqli_query($con, "SELECT Skaits FROM Gramata WHERE ISBN='". $row["ISBN"] ."'");
+                                            $daudzums = mysqli_fetch_array($checkSkaits);
+                                            $gr_available = true;
+                                            
+                                            if($daudzums["Skaits"] == 0)
+                                                $gr_available = false;
+                                            else
+                                                foreach($_SESSION['shopping_cart'] as $id => $product){
+                                                    if($product["gr_isbn"] == $row["ISBN"]){
+                                                        $starpiba = $daudzums["Skaits"] - $product["quantity"];
+                                                        if($starpiba <= 0)
+                                                            $gr_available = false;
+                                                        break;
+                                                    }
+                                                }
+                                            
+                                            if($gr_available){
+                                                echo "<form action=\"user.php?page=".$_GET['page']."&zanrs=".$_GET['zanrs']."\" method=\"post\">
                                                         <input type=\"hidden\" name=\"gr_isbn\" value=\"".$row['ISBN']."\"/>
                                                         <input type=\"submit\" name=\"add_to_cart\" value=\"Ielikt grozā\"/>
                                                   </form>";
+                                            }
+                                            else
+                                            {
+                                                echo "<h3>Nav noliktavā</h3>";
+                                            }
                                         echo "</td>";
                                     echo "</tr>";
                                 echo "</table>";
