@@ -1100,13 +1100,54 @@
                                             echo "<tr>";
                                                echo "<span style=\"color:706A6A;\">Lappušu skaits</span>";
                                                echo "<span style=\"margin-left:101px;\">". $row['Lpp'] ."<br></span>";
-                                            echo "</tr>";                                     
+                                            echo "</tr>";
+                                            echo "<tr>";
+                                                echo "<hr>";
+                                                echo "<form action=\"user.php?page=".$_GET['page']."&zanrs=".$_GET['zanrs']."&gramata=".$_GET['gramata']."\" method=\"post\">";
+                                                    echo "<span style=\"font-size:15px;\">Lietotājvārds:</span>";
+                                                    echo "<input type=\"text\" name=\"lietotajs\" value=\"\" style=\"border: solid 1px #85b1de; margin-left:5px;\" /><br/>";
+                                                    echo "<span style=\"font-size:15px;\">Vertējums:</span>";
+                                                    echo "<select name=\"vertList\" style=\"width:50px; margin-top:10px; margin-left:22px;\">";
+                                                    echo "<option value='1'>1</option>";
+                                                    echo "<option value='2'>2</option>";
+                                                    echo "<option value='3'>3</option>";
+                                                    echo "<option value='4'>4</option>";
+                                                    echo "<option value='5'>5</option>";
+                                                    echo "<option value='6'>6</option>";
+                                                    echo "<option value='7'>7</option>";
+                                                    echo "<option value='8'>8</option>";
+                                                    echo "<option value='9'>9</option>";
+                                                    echo "<option value='10'>10</option>";
+                                                    echo "</select><br/>";
+                                                    echo "<input type=\"hidden\" name=\"gr_isbn\" value=\"".$row['ISBN']."\"/>";
+                                                    echo "<input type=\"submit\" name=\"saglabat_vertejumu\" style=\"font-size:15px; margin-top:5px;\" value=\"Saglabāt vertējumu\"/>";
+                                                echo "</form>";
+                                            echo "</tr>";
                                         echo "</table>";
                                     echo "</td>";
                                 echo "</tr>";
-
                             echo "</table>";
                         echo "</div>";
+                        
+                        
+                        if(@$_POST["saglabat_vertejumu"]){
+                            $login = mysqli_real_escape_string($con, $_POST["lietotajs"]);
+                            $vertejums = mysqli_real_escape_string($con, $_POST["vertList"]);
+                            $isbn = mysqli_real_escape_string($con, $_POST["gr_isbn"]);
+                            $checkVar = mysqli_query($con, "SELECT ID_Lietotajs FROM Lietotajs WHERE Login='". $login ."'" );
+                            $checkVarNum = mysqli_num_rows($checkVar);
+                            if($checkVarNum == 1){
+                                $result = mysqli_query($con, "SELECT ID_Lietotajs FROM Lietotajs WHERE Login='". $login ."'");
+                                $row = mysqli_fetch_array($result);
+                                $id = mysqli_real_escape_string($con, $row["ID_Lietotajs"]);
+                                
+                                mysqli_query($con, "INSERT INTO Vertejums(ID_Lietotajs, ISBN, Vertejums) VALUES('". $id ."', '". 
+                                        $isbn ."', '". $vertejums ."')");  
+                            }
+                            else{
+                                echo "Tads Lietotajs neeksiste";
+                            }
+                        }
                     }
                     
                 }
