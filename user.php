@@ -28,7 +28,7 @@
         <div class="upMenuList">
             <ul>
                 <li><a href="user.php?">Sakums</a></li>
-                <li><a href="user.php?page=1">Gramātas</a></li>
+                <li><a href="user.php?page=1">Grāmatas</a></li>
                 <li><a href="user.php?page=2">Mani pasutijumi</a></li>
                 <li><a href="user.php?page=3">Administratoru panele</a></li>
             </ul>
@@ -188,7 +188,7 @@
                         echo "<br/><input type=\"submit\" name=\"registret\" value=\"Pasūtīt\" style=\"font-size:20px;width:246px;height:30px;\"/>";
                         echo"</td>";
                         
-                    }
+                    
                     echo "</tr>";
                         echo "</table>";
                     echo "</form>";
@@ -230,7 +230,7 @@
                         $parole = $_POST["parole"];
                         $vards = $_POST["vards"];
                         $uzvards = $_POST["uzvards"];
-                        $epasts = $_POST["uzvards"];
+                        $epasts = $_POST["epasts"];
                         $telefons = $_POST["telefons"];
                         $iela = $_POST["iela"];
                         $pilseta = $_POST["pilseta"];
@@ -243,106 +243,89 @@
                             
                             $checkVar = mysqli_query($con, "SELECT Pilseta FROM Valsts WHERE Pilseta='". $pilseta ."'");
                             $checkVarNum = mysqli_num_rows($checkVar);
-                            
                             if($checkVarNum == 0){
                                 $query = mysqli_query($con, "INSERT INTO Valsts(Pilseta, Valsts) VALUES('"
                                         . $pilseta . "', '". $valsts ."')");
-                                
-                                mysqli_free_result($checkVar);
-                                $checkVar = mysqli_query($con, "SELECT Indekss FROM Indekss WHERE Indekss='". $indekss ."'");
-                                $checkVarNum = mysqli_num_rows($checkVar);
-                                
-                                if($checkVarNum == 0){
-                                    $query = mysqli_query($con, "INSERT INTO Indekss(Indekss, Pilseta) VALUES('"
-                                            . $indekss ."', '". $pilseta ."')");
-                                    
-                                    mysqli_free_result($checkVar);
-                                    $checkVar = mysqli_query($con, "SELECT Iela FROM Adrese WHERE Iela='".
-                                            $iela ."' AND Indekss='". $indekss ."'");
-                                    $checkVarNum = mysqli_free_result($checkVar);
-                                    
-                                    if($checkVarNum == 0){
-                                        $query = mysqli_query($con, "INSERT INTO Adrese(Iela, Indekss) VALUES('"
-                                                . $iela ."', '". $indekss . "')");
-                                        
-                                        //mysqli_free_result($checkVar);
-                                        $checkVar = mysqli_query($con, 
-                                                "SELECT Telefonnumurs, Epasts FROM Kontaktinformacija WHERE Telefonnumurs='".
-                                                $telefons ."' AND Epasts='". $epasts ."'");
-                                        $checkVarNum = mysqli_num_rows($checkVar);
-                                        if($checkVarNum == 0){
-                                            $query = mysqli_query($con, "SELECT ID_Adrese FROM Adrese WHERE Iela='".
-                                                    $iela ."' AND Indekss='". $indekss ."'");
-                                            $row = mysqli_fetch_array($query);
-                                            $id_adrese = $row["ID_Adrese"];
-                                            mysqli_free_result($query);
-                                            
-                                            $query = mysqli_query($con, 
-                                                    "INSERT INTO Kontaktinformacija(ID_Adrese, Telefonnumurs, Epasts) VALUES('"
-                                                    . $id_adrese ."', '". $telefons ."', '". $epasts ."')");
-                                            
-                                            $checkVar = mysqli_query($con, "SELECT * FROM Lietotajs WHERE Login = '". $lietotajvards ."'");
-                                            $checkVarNum = mysqli_num_rows($checkVar);
-                                            if($checkVarNum == 0){
-                                                $query = mysqli_query($con, "SELECT ID_kInfo FROM Kontaktinformacija WHERE "
-                                                        . "Telefonnumurs='". $telefons ."' AND Epasts='". $epasts ."'");
-                                                $row = mysqli_fetch_array($query);
-                                                $id_kInfo = $row["ID_kInfo"];
-                                                mysqli_free_result($query);
-                                                
-                                                $query = mysqli_query($con, 
-                                                        "INSERT INTO Lietotajs(Vards, Uzvards, ID_Kontaktinformacija,"
-                                                        . " Login, Parole) VALUES('". $vards ."', '". $uzvards ."', '".
-                                                        $id_kInfo ."', '". $lietotajvards ."', '". $parole ."')");
-                                                
-                                                $today = getdate();
-                                                
-                                                $query = mysqli_query($con, "SELECT ID_Lietotajs FROM Lietotajs WHERE "
-                                                        . "Login='". $lietotajvards ."'");
-                                                $row = mysqli_fetch_array($query);
-                                                $id_lietotajs = $row["ID_Lietotajs"];
-                                                $datums = $today["year"] ."-". $today["mon"] ."-". $today["mday"];
-                                                
-                                                $query = mysqli_query($con, 
-                                                        "INSERT INTO Pasutijums(ID_Lietotajs, Datums) VALUES('".
-                                                        $id_lietotajs ."', '". $datums ."')");
-                                                
-                                                $query = mysqli_query($con, "SELECT ID_Pasutijums FROM Pasutijums WHERE "
-                                                        . "ID_Lietotajs='". $id_lietotajs ."' AND Datums='". $datums ."'");
-                                                $row = mysqli_fetch_array($query);
-                                                $id_pasutijums = $row["ID_Pasutijums"];
-                                                
-                                                foreach($_SESSION['shopping_cart'] as $id => $product){
-                                                    $query = mysqli_query($con, "INSERT INTO Pasutijums_Prece(ID_Pasutijums, "
-                                                        . "ISBN, Daudzums) VALUES('". $id_pasutijums ."', '".
-                                                        $product["gr_isbn"] ."', '". $product["quantity"] ."')");
-                                                }
-                                            }
-                                            
-                                        }
-                                        
-                                    }
-                                    
-                                }
-                                
                             }
                             
+                            mysqli_free_result($checkVar);
+                            $checkVar = mysqli_query($con, "SELECT Indekss FROM Indekss WHERE Indekss='". $indekss ."'");
+                            $checkVarNum = mysqli_num_rows($checkVar);
+                            if($checkVarNum == 0){
+                                $query = mysqli_query($con, "INSERT INTO Indekss(Indekss, Pilseta) VALUES('"
+                                            . $indekss ."', '". $pilseta ."')");
+                            }
                             
+                            mysqli_free_result($checkVar);
+                            $checkVar = mysqli_query($con, "SELECT Iela FROM Adrese WHERE Iela='".
+                                    $iela ."' AND Indekss='". $indekss ."'");
+                            $checkVarNum = mysqli_num_rows($checkVar);
+                            if($checkVarNum == 0){
+                                $query = mysqli_query($con, "INSERT INTO Adrese(Iela, Indekss) VALUES('"
+                                                . $iela ."', '". $indekss . "')");
+                            }
+                            
+                            $checkVar = mysqli_query($con, 
+                                    "SELECT Telefonnumurs, Epasts FROM Kontaktinformacija WHERE Telefonnumurs='".
+                                    $telefons ."' AND Epasts='". $epasts ."'");
+                            $checkVarNum = mysqli_num_rows($checkVar);
+                            if($checkVarNum == 0){
+                                $query = mysqli_query($con, "SELECT ID_Adrese FROM Adrese WHERE Iela='".
+                                        $iela ."' AND Indekss='". $indekss ."'");
+                                $row = mysqli_fetch_array($query);
+                                $id_adrese = $row["ID_Adrese"];
+                                mysqli_free_result($query);
+
+                                $query = mysqli_query($con, 
+                                        "INSERT INTO Kontaktinformacija(ID_Adrese, Telefonnumurs, Epasts) VALUES('"
+                                        . $id_adrese ."', '". $telefons ."', '". $epasts ."')");
+                            }
                             
                             $checkVar = mysqli_query($con, "SELECT * FROM Lietotajs WHERE Login = '". $lietotajvards ."'");
                             $checkVarNum = mysqli_num_rows($checkVar);
                             if($checkVarNum == 0){
-                                $query = mysqli_query($con, "INSERT INTO Lietotajs(Login, Parole) VALUES('"
-                                        . $lietotajvards ."', '" . $parole ."')");
+                                $query = mysqli_query($con, "SELECT ID_kInfo FROM Kontaktinformacija WHERE "
+                                        . "Telefonnumurs='". $telefons ."' AND Epasts='". $epasts ."'");
+                                $row = mysqli_fetch_array($query);
+                                $id_kInfo = $row["ID_kInfo"];
+                                mysqli_free_result($query);
+
+                                $query = mysqli_query($con, 
+                                        "INSERT INTO Lietotajs(Vards, Uzvards, ID_Kontaktinformacija,"
+                                        . " Login, Parole) VALUES('". $vards ."', '". $uzvards ."', '".
+                                        $id_kInfo ."', '". $lietotajvards ."', '". $parole ."')");
+                            }
+                            
+                            $today = getdate();                               
+                            $query = mysqli_query($con, "SELECT ID_Lietotajs FROM Lietotajs WHERE "
+                                    . "Login='". $lietotajvards ."'");
+                            $row = mysqli_fetch_array($query);
+                            $id_lietotajs = $row["ID_Lietotajs"];
+                            $datums = $today["year"] ."-". $today["mon"] ."-". $today["mday"];
+
+                            $query = mysqli_query($con, 
+                                    "INSERT INTO Pasutijums(ID_Lietotajs, Datums) VALUES('".
+                                    $id_lietotajs ."', '". $datums ."')");
+                            
+                            $query = mysqli_query($con, "SELECT ID_Pasutijums FROM Pasutijums WHERE "
+                                    . "ID_Lietotajs='". $id_lietotajs ."' AND Datums='". $datums ."'");
+                            $row = mysqli_fetch_array($query);
+                            $id_pasutijums = $row["ID_Pasutijums"];
+                            
+                            foreach($_SESSION['shopping_cart'] as $id => $product){
+                                $query = mysqli_query($con, "INSERT INTO Pasutijums_Prece(ID_Pasutijums, "
+                                    . "ISBN, Daudzums) VALUES('". $id_pasutijums ."', '".
+                                    $product["gr_isbn"] ."', '". $product["quantity"] ."')");
                             }
                             
                         }
                         else{
-                            echo "Jāaizpilda visus laukus.";
+                            echo "<h3 style=\"color:red; text-align:center; margin-top:10px; \">Jāaizpilda visus laukus!</h3>";
                         }
                         
                         
                         
+                        }
                     }
                 }
                 
@@ -361,7 +344,7 @@
                 if($_GET['page'] == 3 && isset($_GET['admin_menu']) == 1){
                     $query = mysqli_query($con, "SELECT * FROM pasutijumu_info ORDER BY pasutijumu_info.Datums ASC");
                     
-                    echo "<div class=\"pasutijumuApraksts\">
+                    echo "<div class=\"admpasutijumuApraksts\">
                             <table>
                                 <tr>
                                     <th>
@@ -422,8 +405,7 @@
                     echo "<ul>";
                         echo "
                             <li><a href=\"user.php?page=5&admin_menu=2&data_reg=1&gramatas=1&gr_menu=1\">Pievienot grāmatu</a></li>
-                            <li><a href=\"user.php?page=5&admin_menu=2&data_reg=1&gramatas=1&gr_menu=2\">Rēdiģet grāmatas datus</a></li>
-                            <li><a href=\"user.php?page=5&admin_menu=2&data_reg=1&gramatas=1&gr_menu=3\">Dzēst grāmatu</a></li>
+                            <li><a href=\"user.php?page=5&admin_menu=2&data_reg=1&gramatas=1&gr_menu=2\">Visas grāmatas</a></li>
                             ";
                     echo "</ul>";
                     echo "</div>";
@@ -434,14 +416,14 @@
                     echo "<ul>";
                         echo "
                             <li><a href=\"user.php?page=6&admin_menu=2&data_reg=2&izdevniecibas=1&izd_menu=1\">Pievienot izdevniecību</a></li>
-                            <li><a href=\"user.php?page=6&admin_menu=2&data_reg=2&izdevniecibas=1&izd_menu=2\">Rēdiģet izdevniecības datus</a></li>
-                            <li><a href=\"user.php?page=6&admin_menu=2&data_reg=2&izdevniecibas=1&izd_menu=3\">Dzēst izdevniecību</a></li>
+                            <li><a href=\"user.php?page=6&admin_menu=2&data_reg=2&izdevniecibas=1&izd_menu=2\">Visas izdevniecības</a></li>
                             ";
                     echo "</ul>";
                     echo "</div>";
                 }
                 
-                if(isset($_GET['gr_menu']) == 1){
+                $gr_menu = @$_GET["gr_menu"];
+                if($gr_menu == 1){
                     echo "
                          <div class=\"pasutijumuApraksts\">
                             <form action=\"user.php?page=5&admin_menu=2&data_reg=1&gramatas=1&gr_menu=1\" method=\"POST\" enctype=\"multipart/form-data\">
@@ -462,34 +444,41 @@
                                         <tr>
                                             <td><p>Autors</p></td>
                                             <td>
-                                                <select name=\"autorList\" style=\"width:450px\">
-                                                    <option></option>
-                                                </select>
+                                                <select name=\"autorList\" style=\"width:450px\">";
+                                                 $result = mysqli_query($con, "SELECT * FROM Autors");
+                                                 while($row = mysqli_fetch_array($result)){
+                                                     echo "<option value='". $row["ID_Autors"] ."'>". $row["Vards"] ." ". $row["Uzvards"] ."</option>";
+                                                 }
+                                                 mysqli_free_result($result);
+                                           echo "</select>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td><p>Izdevniecība</p></td>
                                             <td>
-                                                <select name=\"izdevniecibaList\" style=\"width:450px\">
-                                                    <option></option>
-                                                </select>
+                                                <select name=\"izdevniecibaList\" style=\"width:450px\">";
+                                                  $result = mysqli_query($con, "SELECT ID_Izdevnieciba, Nosaukums FROM Izdevnieciba");
+                                                  while($row = mysqli_fetch_array($result)){
+                                                     echo "<option value='". $row["ID_Izdevnieciba"] ."'>". $row["Nosaukums"] ."</option>";
+                                                  }
+                                                  mysqli_free_result($result);
+                                            echo "</select>
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td><p>Nodala</p></td>
+                                            <td><p>Nodala - Zanrs</p></td>
                                             <td>
-                                                <select name=\"nodalaList\" style=\"width:450px\">
-                                                    <option></option>
-                                                </select>
+                                                <select name=\"nodalaList\" style=\"width:450px\">";
+                                                $result = mysqli_query($con, "SELECT Zanrs, Nodala FROM Zanrs ORDER BY Nodala ASC");
+                                                while($row = mysqli_fetch_array($result)){
+                                                    echo "<option value='". $row["Zanrs"] ."'>". $row["Nodala"] ."-". $row["Zanrs"] ."</option>";
+                                                }
+                                          echo "</select>
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td><p>Zanrs</p></td>
-                                            <td>
-                                                <select name=\"zanrsList\" style=\"width:450px\">
-                                                    <option></option>
-                                                </select>
-                                            </td>
+                                            <td><p>Valoda</p></td>
+                                            <td><input type=\"text\" name=\"valoda\"/></td>
                                         </tr>
                                         <tr>
                                             <td><p>Lpp</p></td>
@@ -515,16 +504,285 @@
                                             <td><p>Daudzums</p></td>
                                             <td><input type=\"text\" name=\"daudzums\"/></td>
                                         </tr>
-
-
+                                        <tr>
+                                            <td></td>
+                                            <td><input type=\"submit\" value=\"Saglabāt\"/></td>
+                                        </tr>
                                     </table>
                                 </div>
                             </form>
                          </div>";
+                                          
+                        $ISBNisUnique = true;
+                        $lppIsInt = true;
+                        $cenaIsInt = true;
+                        $idAutorsIsInt = true;
+                        $daudzumsIsInt = true;
+                        
+                        
+                        if ($_SERVER["REQUEST_METHOD"] == "POST"){
+                            $isbn = mysqli_real_escape_string($con, $_POST["isbn"]);
+                            $isbn_db = mysqli_query($con, "SELECT ISBN FROM Gramata WHERE ISBN='" . $isbn . "'");
+                            $isbnNum = mysqli_num_rows($isbn_db);
+                            if ($isbnNum) {
+                                $ISBNisUnique = false;
+                            }
+                            $lpp = mysqli_real_escape_string($con, $_POST['lpp']);
+                            $id_autors = mysqli_real_escape_string($con, $_POST["autorList"]);
+                            $cena = mysqli_real_escape_string($con, $_POST["cena"]);
+                            $daudzums = mysqli_real_escape_string($con, $_POST["daudzums"]);
+
+                            if(!is_numeric($lpp))
+                                $lppIsInt = false;
+                            if(!is_numeric($id_autors))
+                                $idAutorsIsInt = false;
+                            if(!is_numeric($cena))
+                                $cenaIsInt = false;
+                            if(!is_numeric($daudzums))
+                                $daudzumsIsInt = false;
+                            
+                            if ($lppIsInt && $idAutorsIsInt && $cenaIsInt && 
+                                    $daudzumsIsInt && $ISBNisUnique && !$_POST["isbn"]=="" && !$_POST["nosaukums"]=="" &&
+                                !$_POST["apraksts"]=="" && !$_POST["lpp"]=="" && 
+                                !$_FILES["bilde"]["name"]=="" && !$_POST["gads"]=="" &&
+                                !$_POST["vaka_tips"]=="" && !$_POST["cena"]=="" && !$_POST["daudzums"] == ""){
+                                    $isbn = mysqli_real_escape_string($con, $_POST['isbn']);
+                                    $nosaukums = mysqli_real_escape_string($con, $_POST['nosaukums']);
+                                    $apraksts = mysqli_real_escape_string($con, $_POST['apraksts']);
+                                    $id_autors = mysqli_real_escape_string($con, $_POST["autorList"]);
+                                    $id_izdevnieciba = mysqli_real_escape_string($con, $_POST["izdevniecibaList"]);
+                                    $zanrs_nodala = mysqli_real_escape_string($con, $_POST["nodalaList"]);
+                                    $valoda = mysqli_real_escape_string($con,$_POST["valoda"]);
+                                    $lpp = mysqli_real_escape_string($con, $_POST['lpp']);
+                                    $imageData = mysqli_real_escape_string($con, file_get_contents($_FILES["bilde"]["tmp_name"]));
+                                    $gads = mysqli_real_escape_string($con, $_POST["gads"]);
+                                    $vaka_tips = mysqli_real_escape_string($con, $_POST["vaka_tips"]);
+                                    $cena = mysqli_real_escape_string($con, $_POST["cena"]);
+                                    $daudzums = mysqli_real_escape_string($con, $_POST["daudzums"]);
+                                    
+                                    mysqli_select_db($con, "gramatnica");
+                                    mysqli_query($con, "CALL add_gramata('".
+                                            $isbn ."', '". $nosaukums ."', '". $apraksts ."', '". $id_autors ."', '". 
+                                            $id_izdevnieciba ."', '". $zanrs_nodala ."', '". $valoda ."', '". $lpp ."', '". 
+                                            $imageData ."', '". 
+                                            $gads ."', '". $vaka_tips ."', '". $cena ."', '". $daudzums ."')");
+                                    
+                            }
+                            
+                        }
                     
                     
                 }
+                $gr_dati = @$_GET["gr_dati"];
+                if($gr_menu == 2 && !$gr_dati){
+                    $result = mysqli_query($con, "SELECT * FROM Gramata ORDER BY ISBN");
+                    echo "
+                        <form action=\"user.php?page=5&admin_menu=2&data_reg=1&gramatas=1&gr_menu=2\" method=\"POST\" enctype=\"multipart/form-data\">
+                        <div class=\"pasutijumuApraksts\">
+                            <table>
+                                <tr>
+                                    <th><h3>ISBN</h3>
+                                    <th><h3>Nosaukums</h3>
+                                    <th><h3>Cena</h3></th>
+                                    <th><h3>Daudzums</h3></th>
+                                    <th></th>
+                                    <th></th>
+                                </tr>";
+                    while($row = mysqli_fetch_array($result)){
+                        echo"
+                                <tr>
+                                    <td>".
+                                        $row["ISBN"]
+                                  ."</td>
+                                    <td>".
+                                        $row["Nosaukums"]
+                                    ."</td>
+                                    <td>".
+                                        $row["Cena"]
+                                    ."</td>
+                                     <td>".
+                                        $row["Skaits"]
+                                     ."</td>
+                                       <td><a href=\"user.php?page=5&admin_menu=2&data_reg=1&gramatas=1&gr_menu=2&gr_dati=". 
+                                       $row["ISBN"] ."\">Dāti</a></td>
+                                       <td>
+                                       <input type=\"submit\" name=\"clicked[". $row["ISBN"] ."]\" value=\"Dzēst\" style=\"background: red; font-size:10px; font-weight:bold;\"/></td>        
+                                </tr>";
+                    }
+                    echo " </table>
+                        </div>
+                        </form>
+                         ";
+                    if (isset($_POST["clicked"])){
+                        mysqli_query($con, "CALL remove_gramata('". key($_POST["clicked"]) ."')");
+                        mysqli_close($con);
+                        echo "<script>window.location.assign(\"user.php?page=5&admin_menu=2&data_reg=1&gramatas=1&gr_menu=2\")</script>";
+                        
+                    }
+
+                }
                 
+                
+                if($gr_dati){
+                    $dati = mysqli_query($con, "SELECT * FROM gramata_info_complete WHERE ISBN = '". $gr_dati ."'");
+                    $datiRes = mysqli_fetch_array($dati);
+                    echo "
+                        <div class=\"pasutijumuApraksts\">
+                            <form action=\"user.php?page=5&admin_menu=2&data_reg=1&gramatas=1&gr_menu=2&gr_dati=". $gr_dati
+                            ."\" method=\"POST\" enctype=\"multipart/form-data\">
+                                <div class=\"gramataForm\">
+                                    <table>
+                                        <tr>
+                                            <td><p>ISBN</p></td>
+                                            <td><input type=\"text\" name=\"isbn\" value=\"". $gr_dati ."\" readonly/></td>
+                                        </tr>
+                                        <tr>
+                                            <td><p>Nosaukums</p></td>
+                                            <td><input type=\"text\" name=\"nosaukums\" value=\"". $datiRes["Nosaukums"] ."\"/></td>
+                                        </tr>
+                                        <tr>
+                                            <td><p>Apraksts</p></td>
+                                            <td><textarea name=\"apraksts\" rows=\"10\" cols=\"60\" id=\"aprakstsArea\" text=\"\">". $datiRes["Apraksts"] ."</textarea></td>
+                                        </tr>
+                                        <tr>
+                                            <td><p>Autors</p></td>
+                                            <td>
+                                                <select name=\"autorList\" style=\"width:450px\">";
+                                                 $result = mysqli_query($con, "SELECT * FROM Autors");
+                                                 while($row = mysqli_fetch_array($result)){
+                                                     if($row["ID_Autors"] == $datiRes["ID_Autors"])
+                                                         echo "<option value='". $row["ID_Autors"] ."' selected=\"selected\">". $row["Vards"] ." ". $row["Uzvards"] ."</option>";
+                                                     else
+                                                        echo "<option value='". $row["ID_Autors"] ."'>". $row["Vards"] ." ". $row["Uzvards"] ."</option>";
+                                                 }
+                                                 mysqli_free_result($result);
+                                           echo "</select>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><p>Izdevniecība</p></td>
+                                            <td>
+                                                <select name=\"izdevniecibaList\" style=\"width:450px\">";
+                                                  $result = mysqli_query($con, "SELECT ID_Izdevnieciba, Nosaukums FROM Izdevnieciba");
+                                                  while($row = mysqli_fetch_array($result)){
+                                                     if($row["ID_Izdevnieciba"] == $datiRes["ID_Izdevnieciba"])
+                                                        echo "<option value='". $row["ID_Izdevnieciba"] ."' selected=\"selected\">". $row["Nosaukums"] ."</option>";
+                                                     else
+                                                         echo "<option value='". $row["ID_Izdevnieciba"] ."'>". $row["Nosaukums"] ."</option>";
+                                                  }
+                                                  mysqli_free_result($result);
+                                            echo "</select>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><p>Nodala - Zanrs</p></td>
+                                            <td>
+                                                <select name=\"nodalaList\" style=\"width:450px\">";
+                                                $result = mysqli_query($con, "SELECT Zanrs, Nodala FROM Zanrs ORDER BY Nodala ASC");
+                                                while($row = mysqli_fetch_array($result)){
+                                                    if($row["Zanrs"] == $datiRes["Zanrs"])
+                                                        echo "<option value='". $row["Zanrs"] ."' selected = \"selected\">". $row["Nodala"] ."-". $row["Zanrs"] ."</option>";
+                                                    else
+                                                        echo "<option value='". $row["Zanrs"] ."'>". $row["Nodala"] ."-". $row["Zanrs"] ."</option>";
+                                                }
+                                          echo "</select>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><p>Valoda</p></td>
+                                            <td><input type=\"text\" name=\"valoda\" value=\"". $datiRes["Valoda"] ."\"/></td>
+                                        </tr>
+                                        <tr>
+                                            <td><p>Lpp</p></td>
+                                            <td><input type=\"text\" name=\"lpp\" value=\"". $datiRes["Lpp"] ."\"/></td>
+                                        </tr>
+                                        <tr>
+                                            <td><p>Bilde</p></td>
+                                            <td>
+                                                <img width=160 height=240 src='data:image/jpeg;base64,".base64_encode( $datiRes["Bilde"] )."'/>
+                                                <input type=\"file\" name=\"bilde\" value=\"\"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><p>Gads</p></td>
+                                            <td><input type=\"text\" name=\"gads\" value=\"". $datiRes["Gads"] ."\"/></td>
+                                        </tr>
+                                        <tr>
+                                            <td><p>Vaka tips</p></td>
+                                            <td><input type=\"text\" name=\"vaka_tips\" value=\"". $datiRes["Vaka_tips"] ."\"/></td>
+                                        </tr>
+                                        <tr>
+                                            <td><p>Cena</p></td>
+                                            <td><input type=\"text\" name=\"cena\" value=\"". $datiRes["Cena"] ."\"/></td>
+                                        </tr>
+                                        <tr>
+                                            <td><p>Daudzums</p></td>
+                                            <td><input type=\"text\" name=\"daudzums\" value=\"". $datiRes["Skaits"] ."\"/></td>
+                                        </tr>
+                                        <tr>
+                                            <td></td>
+                                            <td><input type=\"submit\" value=\"Saglabāt izmaiņas\"/></td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </form>
+                        </div>
+                         ";
+                    $lppIsInt = true;
+                    $cenaIsInt = true;
+                    $idAutorsIsInt = true;
+                    $daudzumsIsInt = true;
+                        
+                        
+                    if ($_SERVER["REQUEST_METHOD"] == "POST"){
+                        $lpp = mysqli_real_escape_string($con, $_POST['lpp']);
+                        $id_autors = mysqli_real_escape_string($con, $_POST["autorList"]);
+                        $cena = mysqli_real_escape_string($con, $_POST["cena"]);
+                        $daudzums = mysqli_real_escape_string($con, $_POST["daudzums"]);
+
+                        if(!is_numeric($lpp))
+                            $lppIsInt = false;
+                        if(!is_numeric($id_autors))
+                            $idAutorsIsInt = false;
+                        if(!is_numeric($cena))
+                            $cenaIsInt = false;
+                        if(!is_numeric($daudzums))
+                            $daudzumsIsInt = false;
+
+                        if ($lppIsInt && $idAutorsIsInt && $cenaIsInt && 
+                                $daudzumsIsInt && !$_POST["nosaukums"]=="" &&
+                            !$_POST["apraksts"]=="" && !$_POST["lpp"]=="" && 
+                            !$_POST["gads"]=="" &&
+                            !$_POST["vaka_tips"]=="" && !$_POST["cena"]=="" && !$_POST["daudzums"] == ""){
+                                $isbn = mysqli_real_escape_string($con, @$_GET["gr_dati"]);
+                                $nosaukums = mysqli_real_escape_string($con, $_POST['nosaukums']);
+                                $apraksts = mysqli_real_escape_string($con, $_POST['apraksts']);
+                                $id_autors = mysqli_real_escape_string($con, $_POST["autorList"]);
+                                $id_izdevnieciba = mysqli_real_escape_string($con, $_POST["izdevniecibaList"]);
+                                $zanrs_nodala = mysqli_real_escape_string($con, $_POST["nodalaList"]);
+                                $valoda = mysqli_real_escape_string($con,$_POST["valoda"]);
+                                $lpp = mysqli_real_escape_string($con, $_POST['lpp']);
+                                if($_FILES["bilde"]["name"]=="")
+                                    $imageData = mysqli_real_escape_string($con, $datiRes["Bilde"]);
+                                else
+                                    $imageData = mysqli_real_escape_string($con, file_get_contents($_FILES["bilde"]["tmp_name"]));
+                                $gads = mysqli_real_escape_string($con, $_POST["gads"]);
+                                $vaka_tips = mysqli_real_escape_string($con, $_POST["vaka_tips"]);
+                                $cena = mysqli_real_escape_string($con, $_POST["cena"]);
+                                $daudzums = mysqli_real_escape_string($con, $_POST["daudzums"]);
+
+                                mysqli_select_db($con, "gramatnica");
+                                mysqli_query($con, "CALL update_gramata('".
+                                        $isbn ."', '". $nosaukums ."', '". $apraksts ."', '". $id_autors ."', '". 
+                                        $id_izdevnieciba ."', '". $zanrs_nodala ."', '". $valoda ."', '". $lpp ."', '". 
+                                        $imageData ."', '". 
+                                        $gads ."', '". $vaka_tips ."', '". $cena ."', '". $daudzums ."')");
+                                 echo "<script>window.location.assign(\"user.php?page=5&admin_menu=2&data_reg=1&gramatas=1&gr_menu=2\")</script>";
+                        }
+                        
+
+                    }
+                }
                 
                 
                 $page_id = $_GET['page'];
@@ -782,23 +1040,9 @@
                 }
                 
                 
-                mysqli_free_result($result);
                 mysqli_close($con);
             }
             
-            
-//            if(isset($_GET['page'])){
-//                $page_id = $_GET['page'];
-//                if($page_id >= 10){
-//                    echo $nodalaArr[$page_id-9]['name'];
-//                }
-////                $result = mysqli_query($con, "SELECT DISTINCT Zanrs FROM Zanrs WHERE Nodala = '" . $nodalaArr[$page_id-9]['name'] . "'");
-////                while($row = mysqli_fetch_array($result)){
-////                    echo $row['Zanrs'];
-////                }
-////                mysqli_free_result($result);
-////                mysqli_close($con);
-//            }
 
         ?>
     </body>

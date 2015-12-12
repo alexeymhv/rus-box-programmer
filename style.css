@@ -238,6 +238,39 @@ input[type=submit] {
     font-size:25px;
 }
 
+.admpasutijumuApraksts table{
+    border: black solid 1px;
+    position:relative;
+    table-layout: fixed;
+    margin-left:150px;
+}
+.admpasutijumuApraksts td {
+    max-width: 600px;
+    vertical-align: top;
+    text-align: center
+}
+.admpasutijumuApraksts tr{
+    margin-bottom: 20px;
+}
+.admpasutijumuApraksts th{
+    padding:10px;
+    font-size: 20px;
+    font-weight:bold;
+}
+.admpasutijumuApraksts p{
+    font-size: 20px;
+    font-weight:bold;
+}
+.admpasutijumuApraksts table tr td:empty{
+    width:50px;
+}
+.admpasutijumuApraksts table tr td{
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 10px;
+    padding-right: 20px;
+}
+
 
 
 .top3List li{
