@@ -18,6 +18,15 @@
          <meta http-equiv="content-type" content="text/html; charset=UTF-8">
         <title>User Panel</title>
         <link rel="stylesheet" href="style.css" type="text/css" media="all" />
+        <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+        <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+        <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+        <link rel="stylesheet" href="/resources/demos/style.css">
+        <script>
+        $(function() {
+          $( "#datepicker1, #datepicker2" ).datepicker();
+        });
+        </script>
     </head>
     
     <body>
@@ -334,13 +343,14 @@
                         echo "
                             <li><a href=\"user.php?page=3&admin_menu=1\">Pasūtījumi</a></li>
                             <li><a href=\"user.php?page=4&admin_menu=2\">Datu pārvaldīšana</a></li>
-                                
+                            <li><a href=\"user.php?page=3&admin_menu=3&atskaite=1\">Atskaite</a></li>       
                             ";
                     echo "</ul>";
                     echo "</div>";
                 }
                 
-                if($_GET['page'] == 3 && isset($_GET['admin_menu']) == 1){
+                $admin_menu = @$_GET['admin_menu'];
+                if($_GET['page'] == 3 && $admin_menu == 1){
                     $query = mysqli_query($con, "SELECT * FROM pasutijumu_info ORDER BY pasutijumu_info.Datums ASC");
                     
                     echo "<div class=\"admpasutijumuApraksts\">
@@ -387,6 +397,58 @@
                         echo "  </tr>";
                     }
                     echo "</table>";
+                    echo "</div>";
+                }
+                
+                $atskaite_idx = @$_GET["atskaite"];
+                echo $atskaite_idx;
+                if($atskaite_idx == 1){
+                    echo "
+                        <div class=\"pasutijumuApraksts\">
+                            <table>
+                                <tr>
+                                <form action=\"user.php?page=3&admin_menu=3&atskaite=1\" method=\"POST\" enctype=\"multipart/form-data\">
+                                    <td><span style=\"font-size:15px; font-weight:bold;\">No:</span><br/><input name=\"noDate\" style=\"border:solid 1px;\" type=\"text\" id=\"datepicker1\"></td>
+                                    <td><span style=\"font-size:15px; font-weight:bold;\">Līdz:</span><br/><input name=\"lidzDate\" style=\"border:solid 1px;\" type=\"text\" id=\"datepicker2\"></td>
+                                </tr>
+                            </table>
+                            <table>
+                                <tr>
+                                        <td><input type=\"submit\" name=\"getAtskaite\" value=\"Ģenerēt atskaite\" style=\"font-size:15px;width:246px;height:25px;\"/></td>
+                                    </form>
+                                </tr>
+                                ";
+                     if(@$_POST["getAtskaite"]){
+                         $noDatums = $_POST["noDate"];
+                         $lidzDatums = $_POST["lidzDate"];
+                         if($noDatums != "" && $lidzDatums != ""){
+                             $noArr = array();
+                             $noArr = explode('/', $noDatums);
+                             $lidzArr = array();
+                             $lidzArr = explode('/', $lidzDatums);
+                             
+                             $noDate = $noArr[2] ."-". $noArr[0] ."-". $noArr[1];
+                             $lidzDate = $lidzArr[2] ."-". $lidzArr[0] ."-". $lidzArr[1];
+                             
+                             $result = mysqli_query($con, "SELECT getSum('". $noDate ."', '". $lidzDate ."') AS sum");
+                             $row = mysqli_fetch_array($result);
+                             
+                             echo "
+                                 <tr>
+                                    <td><span>Kopēja summa par periodu no ". $noDate ." līdz ". $lidzDate .": </span><span style=\"font-weight:bold;font-size:20px;\">".
+                                     $row["sum"] . "&euro;</span>"  
+                                    ."</td>
+                                 </tr>
+                                  ";
+
+                         }
+                     }
+                            
+                    
+                    echo"</table>
+                            
+                         </div>
+                                                            ";
                 }
                 
                 if($_GET['page'] == 4 && isset($_GET['admin_menu']) == 2){
